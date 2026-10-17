@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ArrowRight, BookOpen, CheckCircle2, GraduationCap, HeartHandshake, LockKeyhole, Mail, ShieldCheck, Sparkles, UsersRound } from 'lucide-react'
 
@@ -42,6 +43,7 @@ const roles = {
 type Role = keyof typeof roles
 
 export default function LoginPage() {
+  const router = useRouter()
   const [role, setRole] = useState<Role>('student')
   const current = roles[role]
   const Icon = current.icon
@@ -78,7 +80,7 @@ export default function LoginPage() {
               {(Object.keys(roles) as Role[]).map((item) => { const ItemIcon = roles[item].icon; return <button key={item} type="button" role="tab" aria-selected={role === item} onClick={() => setRole(item)} className={`flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl text-xs font-bold transition ${role === item ? `bg-card shadow-sm ${roles[item].text}` : 'text-muted-foreground hover:text-foreground'}`}><ItemIcon size={18} />{roles[item].label}</button> })}
             </div>
 
-            <form className="mt-8 flex flex-col gap-5" onSubmit={(event) => event.preventDefault()}>
+            <form className="mt-8 flex flex-col gap-5" onSubmit={(event) => { event.preventDefault(); router.push('/') }}>
               <div className="flex flex-col gap-2"><label htmlFor="email" className="text-sm font-semibold">{role === 'student' ? 'Student email or ID' : role === 'teacher' ? 'School email' : 'Parent email'}</label><div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} /><input id="email" type="email" placeholder={role === 'student' ? 'e.g. amakao@example.com' : role === 'teacher' ? 'name@school.edu' : 'you@example.com'} className="min-h-12 w-full rounded-xl border border-border bg-card pl-10 pr-4 text-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-[#0F7B4F] focus:ring-4 focus:ring-emerald-500/10" /></div></div>
               <div className="flex flex-col gap-2"><div className="flex items-center justify-between"><label htmlFor="password" className="text-sm font-semibold">Password</label><button type="button" className={`text-xs font-bold ${current.text}`}>Forgot password?</button></div><div className="relative"><LockKeyhole className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} /><input id="password" type="password" placeholder="Enter your password" className="min-h-12 w-full rounded-xl border border-border bg-card pl-10 pr-4 text-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-[#0F7B4F] focus:ring-4 focus:ring-emerald-500/10" /></div></div>
               <button type="submit" className={`mt-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl ${current.accent} px-4 text-sm font-bold text-white shadow-sm transition hover:brightness-95`}>Sign in as a {current.label.toLowerCase()} <ArrowRight size={17} /></button>
